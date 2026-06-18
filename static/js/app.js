@@ -44,6 +44,7 @@ const charWarningMsg = document.getElementById('char-warning-msg');
 // INITIALIZATION
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     fetchReleases();
     setupCharProgressRing();
 });
@@ -484,4 +485,42 @@ function exportToCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+// Initialize theme on page load (checks localstorage or system preference)
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    
+    // Default to dark mode if nothing is saved
+    const theme = savedTheme || 'dark';
+    
+    document.documentElement.setAttribute('data-theme', theme);
+    updateThemeToggleIcons(theme);
+}
+
+// Toggle between dark and light themes
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggleIcons(newTheme);
+}
+
+// Update the visibility of toggle icons (Sun in dark mode, Moon in light mode)
+function updateThemeToggleIcons(theme) {
+    const btn = document.getElementById('theme-toggle-btn');
+    if (!btn) return;
+    
+    const sunIcon = btn.querySelector('.sun-icon');
+    const moonIcon = btn.querySelector('.moon-icon');
+    
+    if (theme === 'light') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
 }
