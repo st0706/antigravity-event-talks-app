@@ -118,6 +118,12 @@
                     <p>Live tracking of updates, improvements, and fixes in Google BigQuery</p>
                 </div>
                 <div class="actions">
+                    <button class="export-btn" id="export-csv-btn" onclick="exportToCSV()" title="Export filtered list to CSV">
+                        <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                        </svg>
+                        <span>Export CSV</span>
+                    </button>
                     <button class="refresh-btn" id="refresh-button" onclick="refreshFeed()" title="Refresh Feed">
                         <svg class="refresh-icon" id="refresh-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>

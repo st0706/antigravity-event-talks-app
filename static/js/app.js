@@ -222,6 +222,13 @@ function renderFeed() {
                     ${item.content_html}
                 </div>
                 <div class="card-actions">
+                    <button class="card-action-btn btn-secondary btn-copy" onclick="copyCardToClipboard('${releaseId}')" id="copy-btn-${releaseId}">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>Copy</span>
+                    </button>
                     <a href="${item.primary_link}" target="_blank" rel="noopener noreferrer" class="card-action-btn btn-secondary">
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -414,4 +421,67 @@ function submitTweet() {
     // Open Twitter Web Intent in new window
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'width=600,height=400,resizable=yes');
+}
+
+// Copy a specific card's release notes text to the clipboard
+function copyCardToClipboard(releaseId) {
+    const item = allReleases.find(r => generateIdForRelease(r) === releaseId);
+    if (!item) return;
+    
+    const copyText = `Google BigQuery Release Notes - ${item.category} (${item.date})\n\n${item.content_text}\n\nRead more: ${item.primary_link}`;
+    
+    navigator.clipboard.writeText(copyText).then(() => {
+        const btn = document.getElementById(`copy-btn-${releaseId}`);
+        if (btn) {
+            const span = btn.querySelector('span');
+            const originalText = span.textContent;
+            span.textContent = 'Copied!';
+            btn.style.borderColor = 'var(--color-feature)';
+            btn.style.color = 'var(--color-feature)';
+            
+            setTimeout(() => {
+                span.textContent = originalText;
+                btn.style.borderColor = '';
+                btn.style.color = '';
+            }, 1500);
+        }
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+// Export the currently filtered set of release notes as a CSV file
+function exportToCSV() {
+    if (filteredReleases.length === 0) {
+        alert("No release notes to export!");
+        return;
+    }
+    
+    const headers = ["Date", "Category", "Content", "Link"];
+    const rows = filteredReleases.map(r => {
+        return [
+            r.date,
+            r.category,
+            r.content_text,
+            r.primary_link
+        ].map(val => {
+            const cleaned = (val || '').replace(/"/g, '""');
+            return `"${cleaned}"`;
+        }).join(',');
+    });
+    
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    const categorySuffix = currentCategory.toLowerCase();
+    const filename = `bq_releases_${categorySuffix}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }

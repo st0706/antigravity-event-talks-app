@@ -475,6 +475,45 @@ body {
     animation: spin 1s linear infinite;
 }
 
+.actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    border: 1px solid var(--card-border);
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.export-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.02);
+}
+
+.export-btn:active {
+    transform: translateY(0);
+}
+
+.export-icon {
+    width: 18px;
+    height: 18px;
+}
+
 /* ==========================================================================
    DASHBOARD WORKSPACE LAYOUT
    ========================================================================== */
